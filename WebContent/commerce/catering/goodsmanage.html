@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+
+<!--引入easyui的css和js包 -->
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/themes/color.css">
+<link rel="stylesheet" type="text/css" href="../../demo/demo.css">
+<link rel="stylesheet" type="text/css" href="../../uploadify/uploadify.css">
+<script type="text/javascript" src="../../js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" src="../../uploadify/jquery.uploadify.min.js"></script>
+
+<!--定义查询框，将查询条件标签放入名为searchfm的表单内，查询和清空输入框的点击事件处理程序分别在doSearch和doClear两个js函数中定义，Struts2中通过在后台action定义与标签名相同的成员变量及get/set方法来获得提交form中的标签值 -->
+<div style="width: 800px; height: 400px; margin: auto;">
+
+<div id="searchbar" class="easyui-panel" title="请输入查询条件" style="width: 800px; padding: 10px 15px; ">
+	<form id="searchfm" method="post" novalidate>
+	<div style="margin-bottom: 10px">
+		&nbsp &nbsp 商品名称:
+		<input class="easyui-textbox"  name="goodsname_sr" style="width: 100px; height: 15px"> 
+		&nbsp &nbsp 商品类型:
+		<select id="goodstype_s">
+			<option value="">--请选择商品类型--</option>
+		</select>
+	    <!-- 下面定义这个隐藏input标签为了传输js选择的类型使用 -->
+	    <input type="hidden" id="goodstype_sr" name="goodstype_sr"/>
+		&nbsp &nbsp 商品描述:
+		<input class="easyui-textbox" name="descripe_sr" style="width: 120px; height: 15px"> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+		<a href="javascript:void(0)" class="easyui-linkbutton" style="width: 100px; height: 20px" onclick="doSearch('goodsmanage_searchrecord.action')">查询</a>
+	</div>
+	</form>
+</div>
+  
+<p>
+
+<!--定义easyui datagrid类型的table，用于显示数据记录，增删改工具栏在toolbar属性中定义，获取数据的程序在相关js函数中定义，如saveWifi，doSearch-->
+<table id="dg" class="easyui-datagrid" title="请维护以下信息"
+	style="width: 800px; height: 370px;" toolbar="#toolbar"
+	pagination="true" rownumbers="true" fitColumns="true"
+	singleSelect="true">
+	<thead>
+		<tr>
+		    <th field="goodsid" hidden="true"></th>
+		    <th field="typeid" hidden="true"></th>
+			<th field="goodsname" width="50">商品名称</th>
+			<th field="goodstype" width="35">商品类型</th>
+			<th field="descripe" width="50">商品描述</th>
+			<th field="unit" width="20">单位</th>
+			<th field="price" width="20" >价格</th>
+			<th field="priceunit" width="20" >价格单位</th>
+			<th data-options="field:'picture',formatter:showImg" width="120" >图片</th>
+		</tr>
+	</thead>
+</table>
+<div id="toolbar">
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-add" plain="true" onclick="newrecord('goodsmanage_newrecord.action')">新增</a> <a
+		href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-edit" plain="true" onclick="editrecord('goodsmanage_updaterecord.action')">编辑</a> <a
+		href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-remove" plain="true" onclick="deleterecord('goodsmanage_deleterecord.action')">删除</a>
+		
+</div>
+</div>
+
+<!--定义easyui类型的新增和编辑数据对话框，在newWifi和saveWifi这两个js函数中打开此对话框-->
+<div id="dlg" class="easyui-dialog"
+	style="width: 600px; height: 500px; padding: 10px 20px" closed="true"
+	buttons="#dlg-buttons" >
+	<div class="ftitle">维护商品类型</div>
+		    <input hidden='true' name="goodsid" style="width:0px;height:0px"  >
+	<form id="fm" method="post" enctype="multipart/form-data" novalidate>
+	    
+		<div class="fitem">
+			<label>商品名称:</label> <input name="goodsname" 
+				class="easyui-textbox" required="true">
+		</div>
+		<div class="fitem">
+			<label>商品类型:</label> 
+		    <select class="select" id="goodstype_sel">
+			    <option value="">--请选择商品类型--</option>
+		    </select>
+	        <!-- 下面定义这个隐藏input标签为了传输js选择的类型使用 -->
+	        <input type="hidden" id="typeid" name="typeid"/>
+		</div>
+		<div class="fitem">
+			<label>商品描述:</label> <textarea  name="descripe" rows="10" cols="20"> </textarea>
+		</div>		
+		<div class="fitem">
+			<label>单位:</label> <input name="unit" 
+				class="easyui-textbox" required="false">
+		</div>
+		<div class="fitem">
+			<label>价格:</label> <input name="price" 
+				class="easyui-numberbox" style="width:300px" required="true">
+		</div>
+		<div class="fitem">
+			<label>价格单位:</label> <input name="priceunit" 
+				class="easyui-textbox" required="false">
+		</div>
+        
+		
+		<div class="picture">
+            <label>选择图片:</label>  
+        </div>
+        <div class="file-box">
+        <input id="filename" name="filename" type="hidden" />
+
+            <input type='text' name='textfield' id='textfield' class='txt' /> 
+            <a href="" class="easyui-linkbutton" plain="true" style= 'width:70px'>浏览...</a>
+            <input type="file" name="myfile" class="file" id="myfile" size="28" onchange="document.getElementById('textfield').value=this.value" />
+            <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" onclick="uploadfile()">上传</a>       
+       </div>
+       <div id="uploadok" style= 'display:none;clear:both;' class="upresult">
+            <br/>
+            <label style="font-weight:bold;">已上传图片:&nbsp &nbsp</label>       
+            <label id="filename_l" style="color:blue;font-weight:bold;"></label> 
+            <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" onclick="deletefile()">删除</a>       
+       </div>
+       <div id="uploadfailed" style= 'display:none;clear:both;' class="upresult" >
+            <br/>
+            <label>已上传图片:&nbsp &nbsp</label>
+            <font color='red'>上传失败</font>
+       </div>
+       <div id="deleteok" style= 'display:none;clear:both;' class="upresult">
+            <br/>
+            <label style="font-weight:bold;">已上传图片:&nbsp &nbsp</label>        
+       </div>
+ 
+	</form>
+</div>
+<div id="dlg-buttons">
+	<a href="javascript:void(0)" class="easyui-linkbutton c6"
+		iconCls="icon-ok" onclick="saverecord()" style="width: 90px">保存</a> <a
+		href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
+		style="width: 90px">取消</a>
+</div>
+
+<!--定义js函数-->
+<script type="text/javascript">
+    var url;
+    var goodstypelist;
+    $(document).ready(function(){	
+        $.ajax({
+            type: "POST",
+            url: "goodstypemanage_obtaingoodstype.action",
+            dataType: "json",
+            success: function (result) {
+        	    var result = eval('(' + result + ')');
+        	    goodstypelist = result;
+        		$.each(result, function(k, p) {
+        			var option = "<option value='" + p.typeid + "'>" + p.goodstype
+        					+ "</option>";
+        			$("#goodstype_s").append(option);
+        		});     
+            },
+            error: function (json) {
+                $.messager.alert("错误", "获取商品类型失败！", "error");
+            }
+       });
+    });
+    
+    function showImg(val,row){
+    	//alert(val);
+    	//var val = "http://cache.soso.com/wenwen/i/wenwen_logo.gif";
+    	var val = "/Wuxianhui/commerce/catering/img/"+val;
+    	return '<img src='+val+'>';
+    }
+    
+    function uploadfile(){
+    	//alert("in uploadfile");
+    	var filename = document.getElementById('textfield').value;
+    	if(!filename){
+    		$.messager.alert("提示", "请选择文件", "info");
+    		return;
+    	}
+    	var fm = document.getElementById('filename_l').innerHTML;
+    	if(!fm==""){
+    		$.messager.alert("提示", "请先删除已上载图片再上载新图片", "info");
+    		return;    		
+    	}
+		$('#fm').form('submit', {
+			url : 'goodsmanage_fileupload.action',
+			onSubmit : function() {
+				//return $(this).form('validate');
+			},
+			success : function(result) {
+				var result = eval('(' + result + ')');
+				result = JSON.parse(result);
+				if (result.filename) {
+					 document.getElementById('deleteok').style.display='none';
+					 document.getElementById('uploadfailed').style.display='none';
+					 document.getElementById('uploadok').style.display='block';
+					 document.getElementById('filename_l').innerHTML = result.filename;
+					 document.getElementById('filename').value = result.filename;
+				} else {
+					 document.getElementById('deleteok').style.display='none';
+					 document.getElementById('uploadok').style.display='none';
+					 document.getElementById('uploadfailed').style.display='block';
+				}
+			}
+		});
+     }
+   
+    function deletefile(){
+    	//alert("in deletefile");
+    	var filen = document.getElementById('filename_l').innerHTML;
+    	if(filen==""){
+    		$.messager.alert("提示", "没有可删除的图片", "info");
+    		return;    		
+    	}
+    	//alert(filen);
+		$('#fm').form('submit', {
+			url : 'goodsmanage_filedelete.action',
+			onSubmit : function() {
+				//return $(this).form('validate');
+			},
+			success : function(result) {
+				var result = eval('(' + result + ')');
+				result = JSON.parse(result);
+				//alert(result);
+				if (result.errorMsg) {
+					$.messager.show({
+						title : 'Error',
+						msg : result.errorMsg
+					});
+				} else {
+					 document.getElementById('deleteok').style.display='block';
+					 document.getElementById('uploadok').style.display='none';
+					 document.getElementById('uploadfailed').style.display='none';
+					 document.getElementById('filename_l').innerHTML = "";
+					 document.getElementById('filename').value="";
+				}
+			}
+		});
+     }
+    
+	function newrecord(url_p) {
+		$('#dlg').dialog('open').dialog('setTitle', '新增商品');
+		$('#fm').form('clear');
+		document.getElementById('deleteok').style.display='none';
+		document.getElementById('uploadok').style.display='none';
+		document.getElementById('uploadfailed').style.display='none';
+		document.getElementById('filename_l').innerHTML = "";
+		url = url_p;
+        $("#goodstype_sel").empty();
+		var option = "<option value=''>" + "--请选择商品类型--" + "</option>";
+		$("#goodstype_sel").append(option);
+		$.each(goodstypelist, function(k, p) {
+			option = "<option value='" + p.typeid + "'>" + p.goodstype
+					+ "</option>";
+			$("#goodstype_sel").append(option);
+		});   
+	}
+	
+	function editrecord(url_p) {
+		$("#goodstype_sel").empty();
+		var row = $('#dg').datagrid('getSelected');
+        alert(row);
+		if (row) {
+			alert(row.goodsid);
+			var index=0;
+			var j=1;
+			var option = "<option value=''>" + "--请选择商品类型--" + "</option>";
+			$("#goodstype_sel").append(option);
+			$.each(goodstypelist, function(k, p) {
+				var option = "<option value='" + p.typeid + "'>" + p.goodstype
+						+ "</option>";
+				$("#goodstype_sel").append(option);
+				if(row.goodstype == p.goodstype){
+					index = j;
+				}
+				else{
+					j++;					
+				}
+			});  
+			$("#goodstype_sel").get(0).selectedIndex=index;
+	 
+			$('#dlg').dialog('open').dialog('setTitle', '编辑桌位');
+			$('#fm').form('load', row);
+			url = url_p;
+		}
+	}
+	function saverecord() {
+		//alert("in saverecord, url="+url);
+		document.getElementById('typeid').value=$("#goodstype_sel").val();
+    	document.getElementById("filename").value = document.getElementById("filename_l").innerHTML;
+    	//alert(document.getElementById("filename_l").innerHTML);
+    	//alert(document.getElementById("filename").value);
+		$('#fm').form('submit', {
+			url : url,
+			onSubmit : function() {
+				return $(this).form('validate');
+			},
+			success : function(result) {
+				var result = eval('(' + result + ')');
+				if (result.errorMsg) {
+					$.messager.show({
+						title : 'Error',
+						msg : result.errorMsg
+					});
+				} else {
+					$('#dlg').dialog('close'); // close the dialog
+					result = JSON.parse(result);
+					$('#dg').datagrid('loadData', result); // reload the data
+				}
+			}
+		});
+	}
+	function deleterecord(url_p) {
+		var row = $('#dg').datagrid('getSelected');
+		//alert(row.goodsid);
+		if (row) {
+			$.messager.confirm('请选择', '确定删除?', function(r) {
+				if (r) {
+					$.post(url_p, {
+						goodsid : row.goodsid
+					}, function(result) {
+						var result = eval('(' + result + ')');
+						result = JSON.parse(result);
+						if (result.errorMsg) {
+							$.messager.show({
+								title : 'Error',
+								msg : result.errorMsg
+							});
+						} else {
+							$('#dg').datagrid('loadData', result); // reload the data
+						}
+					});
+				}
+			});
+		}
+	}	
+	function doSearch(url_p){  
+		document.getElementById("goodstype_sr").value = document.getElementById("goodstype_s").value;
+		//alert(document.getElementById("goodstype_sr").value);
+		$('#searchfm').form('submit', {
+			url: url_p,
+			//url :  "goodstypemanage_searchgoodstype",
+			onSubmit : function() {
+				return $(this).form('validate');
+			},
+			success : function(result) {
+				var result = eval('(' + result + ')');
+				if (result.errorMsg) {
+					$.messager.show({
+						title : 'Error',
+						msg : result.errorMsg
+					});
+				} else {
+					result = JSON.parse(result);
+					doPager(url_p);  
+					$('#dg').datagrid('loadData', result); // reload the data
+				}
+			}
+		});		 
+	}
+    function doPager(url_p){
+	    var p = $('#dg').datagrid('getPager'); 
+	    $(p).pagination({ 
+	        pageSize: 10,//每页显示的记录条数，默认为10 
+	        pageList: [5,10,15],//可以设置每页记录条数的列表 
+	        beforePageText: '第',//页数文本框前显示的汉字 
+	        afterPageText: '页    共 {pages} 页', 
+	        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+	        onSelectPage:function(pageNumber,pageSize){
+        		$('#searchfm').form('submit', {
+        			url :  url_p+".action?page="+pageNumber+"&rows="+pageSize,
+        			//url :  "goodstypemanage_searchgoodstype.action?page="+pageNumber+"&rows="+pageSize,
+        			onSubmit : function() {
+        				return $(this).form('validate');
+        			},
+        			success : function(result) {
+        				var result = eval('(' + result + ')');
+        				if (result.errorMsg) {
+        					$.messager.show({
+        						title : 'Error',
+        						msg : result.errorMsg
+        					});
+        				} else {
+        					result = JSON.parse(result);
+        					$('#dg').datagrid('loadData', result); // reload the data
+        				}
+        			}
+        		});	
+	        } 
+	    });  	
+    }
+    
+    
+
+</script>
+<style type="text/css">
+#fm {
+	margin: 0;
+	padding: 10px 20px;
+}
+
+.ftitle {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.fitem {
+	margin-bottom: 5px;
+	hight:50px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 80px;
+}
+.uploadok label {
+	display: inline-block;
+	width: 80px;
+}
+.fitem input {
+	width: 300px;
+}
+.fitem textarea {
+	width: 300px;
+}
+.fitem  select{
+    width: 300px;
+}
+
+.picture{float:left;width:84px;}
+.file-box{ position:relative;width:340px;float:left}
+.txt{ height:14px;  width:200px;}
+.btn{ height:30px; width:60px;}
+.file{ position:absolute; top:0; right:80px; height:20px; filter:alpha(opacity:0);opacity: 0;width:260px }
+
+</style>

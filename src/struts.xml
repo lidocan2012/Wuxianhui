@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+	
+<struts>
+    <constant name="struts.multipart.maxSize" value="10000000" />
+    <constant name="struts.multipart.saveDir" value="/tmp"/>
+	<package name="default" extends="json-default">
+			
+		<action name="wifimanage_*" class="com.wifihi.action.wifimanage.WifiRegistrate" method="{1}">
+			<result name="success" type="json">
+				<param name="contentType">text/html</param>
+				<param name="root">wifiset</param>
+			</result>		
+		</action>	
+				
+		<action name="menumanage_*" class="com.wifihi.action.admin.MenuMaintaince" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">menuset</param>
+			</result>		
+		</action>					
+        <action name="wspusermanage_*"  class="com.wifihi.action.usermanage.WspUserRegistrate" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">wspuserset</param>
+			</result>		
+        </action> 				
+        <action name="usermanage_*"  class="com.wifihi.action.usermanage.UserRegistrate" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">userset</param>
+			</result>		
+        </action> 				
+        <action name="tablemanage_*"  class="com.wifihi.action.commerce.catering.TableManage" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">tableset</param>
+			</result>		
+        </action> 				
+        <action name="goodstypemanage_*"  class="com.wifihi.action.commerce.catering.GoodstypeManage" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">goodstypeset</param>
+			</result>		
+        </action> 				
+        <action name="goodsmanage_*"  class="com.wifihi.action.commerce.catering.GoodsManage" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">goodsset</param>
+			</result>		
+        </action> 				
+        <action name="wifivisiting_*"  class="com.wifihi.action.wifimanage.WifiVisitingHistory" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">wifihistoryset</param>
+			</result>		
+        </action> 				
+        <action name="ordermanage_*"  class="com.wifihi.action.commerce.catering.OrderManage" method="{1}">
+			<result name="success" type="json">
+			    <param name="contentType">text/html</param>
+				<param name="root">orderset</param>
+			</result>		
+        </action> 				
+	</package>
+	<package name="default2" extends="struts-default">
+        <action name="registratewspuser"  class="com.wifihi.action.usermanage.WspUserRegistrate" method="registrate">
+            <result name="success">/usermanage/registratesuccess.html</result>
+            <result name="existuser">/usermanage/existusererror.html</result>
+            <result name="error">/usermanage/registrateerror.html</result>
+        </action> 								
+        <action name="login"  class="com.wifihi.action.usermanage.Login" method="doLogin">
+            <result name="success" type="redirect">/index.html</result>
+            <result name="error">/usermanage/loginerror.html</result>
+        </action>
+        <!--  
+        <action name="wsptypesel"  class="com.wifihi.action.usermanage.Login" method="wsptypesel">
+            <result name="success" type="redirect">/index.html</result>
+            <result name="error">/usermanage/loginerror.html</result>
+        </action>
+		-->	
+		
+    </package>
+	<package name="com.wifihi.terminalServerAction" extends="json-default">
+		<action name="PrivateUserRegiste" class="com.wifihi.terminalServerAction.RegisterAction" method="registerPrivateUser">
+			<result name="success" type="json">
+				<param name="root">id</param>
+			</result>
+		</action>
+		<action name="PrivateUserLogin" class="com.wifihi.terminalServerAction.LoginAction" method="userLoginCheck">
+			<result name="success" type="json">
+				<param name="root">id</param>
+			</result>
+		</action>
+		<action name="getWifiList" class="com.wifihi.terminalServerAction.WifiAction" method="rtnWifiList">
+			<result name="success" type="json">
+				<param name="root">wifiList</param>
+			</result>
+		</action> 
+		<action name="getWifi" class="com.wifihi.terminalServerAction.WifiAction" method="rtnWifi">
+			<result name="success" type="json">
+				<param name="root">wifi</param>
+			</result>
+		    </action> 
+		    <action name="getAuthorise" class="com.wifihi.terminalServerAction.WifiAction" method="rtnAuthorise">
+			<result name="success" type="json">
+				<param name="root">wifi</param>
+			</result>
+		    </action> 
+		<action name="messagePush" class="com.wifihi.terminalServerAction.PushMessageAction" method="PushMessage">
+			<result name="success" type="json">
+				<param name="root">pushMessageResult</param>
+			</result>
+		</action> 
+		<action name="showMenuInfo" class="com.wifihi.terminalServerAction.ShowMenu" method="wspShowMenu">
+			<result name="success" type="json">
+				<param name="root">info</param>
+			</result>
+		</action>  
+		<action name="getDishes" class="com.wifihi.terminalServerAction.GetDishesAction" method="getDishes">
+			<result name="success" type="json">
+				<param name="root">goodsList</param>
+			</result>
+		</action> 
+		<action name="handleCommitOrders" class="com.wifihi.terminalServerAction.HandleCommitOrdersAction" method="handleCommitOrders">
+			<result name="success" type="json">
+				<param name="root">goodsList</param>
+			</result>
+		</action> 
+		<action name="WspLogin" class="com.wifihi.terminalServerAction.WspLoginAction" method="wspLoginCheck">
+			<result name="success" type="json">
+				<param name="root">id</param>
+			</result>
+		</action>
+		<action name="WspAuthorise" class="com.wifihi.terminalServerAction.WifiAction" method="WspAuthorise">
+			<result name="success" type="json">
+				<param name="root">id</param>
+			</result>
+		 </action>
+		 <action name="FindPassword" class ="com.wifihi.terminalServerAction.LoginAction" method="findPassword" >
+		 	<result name="success" type="json">
+		 		<param name="root">findPassResult</param>
+		 	</result>
+		 </action>
+	</package>
+</struts>

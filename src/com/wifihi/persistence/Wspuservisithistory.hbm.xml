@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class
+		name="Wspuservisithistory"
+		table="wspuservisithistory"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="Id"
+			type="string"
+			column="WSPVisitingID"
+		>
+			<generator class="assigned"/>
+		</id>
+
+		<property
+			name="WSPVisitingDate"
+			column="WSPVisitingDate"
+			type="date"
+			not-null="false"
+			length="10"
+		/>
+		<property
+			name="WSPVisitingTime"
+			column="WSPVisitingTime"
+			type="time"
+			not-null="false"
+			length="8"
+		/>
+		<property
+			name="Country"
+			column="Country"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="Province"
+			column="Province"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="City"
+			column="City"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="District"
+			column="District"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<many-to-one
+			name="UserID2"
+			column="UserID2"
+			class="Wspuser"
+			not-null="false"
+		>
+		</many-to-one>
+
+
+	</class>	
+</hibernate-mapping>

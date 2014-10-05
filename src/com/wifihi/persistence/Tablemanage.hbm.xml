@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class
+		name="Tablemanage"
+		table="tablemanage"
+		lazy="false"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<composite-id name="Id" class="TablemanagePK" >
+			<key-many-to-one
+				name="WSPUser"
+				class="Wspuser"
+				column="WSPUser" lazy="false"
+			/>
+			<key-property
+				name="TableID"
+				column="TableID"
+				type="integer" 
+			/>
+		</composite-id>
+
+		<property
+			name="Extends"
+			column="Extends"
+			type="string"
+			not-null="false"
+		/>
+		
+		<set name="Ordermanages" inverse="true">
+			<key> 
+			   <column name="TableID"/>
+			   <column name="Wspuser"/>
+			</key>
+			<one-to-many class="Ordermanage"/>
+		</set>
+        
+	</class>	
+</hibernate-mapping>

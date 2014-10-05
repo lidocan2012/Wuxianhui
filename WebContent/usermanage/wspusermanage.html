@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+
+<!--引入easyui的css和js包 -->
+<link rel="stylesheet" type="text/css"
+	href="../css/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../css/themes/color.css">
+<link rel="stylesheet" type="text/css" href="../demo/demo.css">
+<script type="text/javascript" src="../js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../js/ProJson.js"></script>
+<script type="text/javascript" src="../js/CityJson.js"></script>
+<script type="text/javascript" src="../js/DistrictJson.js"></script>
+
+<!--定义查询框，将查询条件标签放入名为searchfm的表单内，查询和清空输入框的点击事件处理程序分别在doSearch和doClear两个js函数中定义，Struts2中通过在后台action定义与标签名相同的成员变量及get/set方法来获得提交form中的标签值 -->
+<div style="width: 800px; height: 400px; margin: auto;">
+
+	<div id="searchbar" class="easyui-panel" title="请输入查询条件"
+		style="width: 800px; padding: 10px 15px;">
+		<form id="searchfm" method="post" novalidate>
+			<div style="margin-bottom: 10px">
+				用户名称: <input class="easyui-textbox" name="username_sr"
+					style="width: 120px; height: 15px"> &nbsp &nbsp 电话号码: <input
+					class="easyui-textbox" name="phonenumber_sr"
+					style="width: 120px; height: 15px"> &nbsp &nbsp 电子邮件: <input
+					class="easyui-textbox" name="email_sr"
+					style="width: 120px; height: 15px"> &nbsp &nbsp 业务类型: <select
+					id="businesstype_sr" name="businesstype_sr" style="width: 100px">
+					<option value=""></option>
+                    <option value ="餐饮">餐饮娱乐</option>                
+                    <option value="博物馆">旅游</option>
+                    <option value="停车场">停车场</option>
+                    <option value="其它">其它</option>
+				</select>
+			</div>
+			<div style="margin-bottom: 1px">
+				<select id="selProvince_sr">
+					<option value="0">--请选择省份--</option>
+				</select> <select id="selCity_sr" >
+					<option value="0">--请选择城市--</option>
+				</select> <select id="selDistrict_sr">
+					<option value="0">--请选择区/县--</option>
+	             <!-- 下面定义这三个隐藏input标签为了传输js选择的省市区名称使用 -->
+	             <input type="hidden" id="province_sr" name="province_sr"/>
+	             <input type="hidden" id="city_sr" name="city_sr"/>
+	             <input type="hidden" id="district_sr" name="district_sr"/>
+				</select> &nbsp &nbsp 详细地址: <input class="easyui-textbox"
+					name="detailaddress_sr" style="width: 150px; height: 15px">
+				&nbsp &nbsp&nbsp &nbsp <a href="javascript:void(0)"
+					class="easyui-linkbutton" style="width: 100px; height: 20px"
+					onclick="doSearch()">查询</a>
+			</div>
+		</form>
+	</div>
+
+	<p>
+
+		<!--定义easyui datagrid类型的table，用于显示数据记录，增删改工具栏在toolbar属性中定义，获取数据的程序在相关js函数中定义，如saveWifi，doSearch-->
+	<table id="dg" class="easyui-datagrid" title="请维护以下信息"
+		style="width: 800px; height: 370px;" toolbar="#toolbar"
+		pagination="true" rownumbers="true" fitColumns="true"
+		singleSelect="true">
+		<thead>
+			<tr>
+				<th field="userID2" width="50" hidden="true">用户名</th>
+				<th field="username" width="50">用户名</th>
+				<th field="password" width="50">密码</th>
+				<th field="phonenumber" width="50">电话号码</th>
+				<th field="email" width="50">电子邮件</th>
+				<th field="province" width="50">省</th>
+				<th field="city" width="50">市</th>
+				<th field="district" width="50">县</th>
+				<th field="detailaddress" width="50">详细地址</th>
+				<th field="businesstype" width="50">业务类型</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="toolbar">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-add" plain="true"	onclick="newWspuser()">新增</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-edit" plain="true" onclick="editWspuser()">编辑</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-remove" plain="true" onclick="deleteWspuser()">删除</a>
+
+	</div>
+	
+    <!--定义easyui类型的新增和编辑数据对话框，在newWspuser和saveWspuser这两个js函数中打开此对话框-->
+<div id="dlg" class="easyui-dialog"
+	style="width: 600px; height: 450px; padding: 10px 20px" closed="true"
+	buttons="#dlg-buttons">
+	<div class="ftitle">编辑WSP用户</div>
+<form id="fm" name="fm" method="post" novalidate>
+	<table width="510" height="350" border ="0px" cellspacing="6px" align="center">
+		<tr>
+			<td width="291">
+				<div style=" margin: auto;">
+				<input id="userID2" name="userID2" type="hidden"> 
+				<span class="text">用户名:</span>&nbsp <input name="username" class="easyui-validatebox textbox" data-options="required:true,validType:'length[3,15]'"
+						 style="width: 150px; height: 15px">
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td width="104">
+				<div style=" margin: auto;">
+					<span class="text">请输入密码:</span>&nbsp<input
+						id="password" name="password" type="password" class="easyui-validatebox textbox" data-options="required:true,validType:'length[6,20]'" 
+						style="width: 150px; height: 15px">
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td width="104">
+				<div style=" margin: auto;">
+					<span class="text">再次输入密码:</span>&nbsp<input
+						id="repassword" name="repassword" type=password class="easyui-validatebox textbox" data-options="required:true,validType:'length[6,20]'" 
+						style="width: 150px; height: 15px">
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td width="104">
+				<div style=" margin: auto;">
+					<span class="text">电话号码:</span>&nbsp<input
+					    id="phonenumber" name="phonenumber" class="easyui-validatebox textbox" data-options="required:true" 
+						style="width: 150px; height: 15px">
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td width="104">
+				<div style=" margin: auto;">
+					<span class="text">电子邮件:</span>&nbsp<input
+						id="email" name="email" class="easyui-validatebox textbox" data-options="required:true,validType:'email'"
+						style="width: 150px; height: 15px"><font color="#FF0000">&nbsp(请准确填写可用于找回密码)</font>
+				</div>
+			</td>
+		</tr>		
+		<tr>
+		    <td width="104">
+		       <div style=" margin: auto;">
+				<select id="selProvince">
+					<option value="0">--请选择省份--</option>
+				</select> <select id="selCity" >
+					<option value="0">--请选择城市--</option>
+				</select> <select id="selDistrict">
+					<option value="0">--请选择区/县--</option>
+				</select>
+	             <!-- 下面定义这三个隐藏input标签为了传输js选择的省市区名称使用 -->
+	             <input type="hidden" id="province" name="province" />
+	             <input type="hidden" id="city" name="city" />
+	             <input type="hidden" id="district" name="district" />
+	           </div>
+	        </td>	
+		</tr>
+		<tr>
+			<td width="104">
+				<div style="margin: auto;">
+					<span class="text">详细地址:</span>&nbsp<input
+						id="detailaddress"  name="detailaddress" class="easyui-validatebox textbox" data-options="required:true" 
+						style="width: 280px; height: 15px"><font color="#FF0000">&nbsp(省市县/区不再重复填写)</font>
+				</div>
+			</td>
+		</tr>		
+		<tr>
+		    <td width="104">
+		       <div style=" margin: auto;">
+                  <span class="text">业务类型:</span>&nbsp
+                  <select id="businesstype" name="businesstype" style="width: 100px" data-options="required:true">
+                     <option value ="餐饮">餐饮娱乐</option>                
+                     <option value="博物馆">旅游</option>
+                     <option value="停车场">停车场</option>
+                     <option value="其它">其它</option>
+                  </select>
+                  <input type="hidden" id="business-type" name="business-type" />
+	           </div>
+	        </td>	
+		</tr>
+
+		<tr>
+		    <td width="250">
+		        <div style="margin: auto;">
+	&nbsp &nbsp&nbsp &nbsp<a href="javascript:void(0)" class="easyui-linkbutton c6"
+		iconCls="icon-ok" onclick="saveWspuser()" style="width: 90px">保存</a> &nbsp &nbsp&nbsp &nbsp&nbsp &nbsp&nbsp &nbsp &nbsp &nbsp&nbsp &nbsp &nbsp &nbsp&nbsp &nbsp<a
+		href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
+		style="width: 90px">取消</a>
+		        </div>
+            </td>
+		</tr>
+			
+	</table>
+          
+	</form>    	
+</div>
+
+
+<!--定义js函数-->
+<script type="text/javascript">
+	//区域选择
+	var urladdr;
+	$(function() {
+		$.each(province, function(k, p) {
+			var option = "<option value='" + p.ProID + "'>" + p.ProName
+					+ "</option>";
+			$("#selProvince_sr").append(option);
+		});
+		//初始化省市区三级联动选择框内容
+		$("#selProvince_sr").change(
+				function() {
+					var selValue = $(this).val();
+					$("#selCity_sr option:gt(0)").remove();
+
+					$.each(city, function(k, p) {
+						if (p.ProID == selValue) {
+							var option = "<option value='" + p.CityID + "'>"
+									+ p.CityName + "</option>";
+							$("#selCity_sr").append(option);
+						}
+					});
+
+				});
+		$("#selCity_sr").change(
+				function() {
+					var selValue = $(this).val();
+					$("#selDistrict_sr option:gt(0)").remove();
+
+					$.each(District, function(k, p) {
+						if (p.CityID == selValue) {
+							var option = "<option value='" + p.Id + "'>"
+									+ p.DisName + "</option>";
+							$("#selDistrict_sr").append(option);
+						}
+				});
+		});
+	});
+
+	function doSearch() {
+		var provinceid = document.getElementById("selProvince_sr").value;
+		var cityid = document.getElementById("selCity_sr").value;
+		var districtid = document.getElementById("selDistrict_sr").value;
+		//alert(provinceid+","+cityid+","+districtid);		
+		var provincename;
+		var cityname;
+		var districtname;		
+		if(provinceid==0){
+			provincename="";
+		}
+		else{
+			provincename=province[provinceid-1].ProName;
+		}
+		if(cityid==0){
+			cityname="";
+		}
+		else{
+			cityname=city[cityid-1].CityName;
+		}
+		if(districtid==0){
+			districtname="";
+		}
+		else{
+			districtname=District[districtid-1].DisName;
+		}		
+		//alert(provincename+","+cityname+","+districtname);
+		document.getElementById("province_sr").value = provincename;
+		document.getElementById("city_sr").value = cityname;
+		document.getElementById("district_sr").value = districtname;
+
+		$('#searchfm').form('submit', {
+			url : "wspusermanage_searchwspuser.action",
+			onSubmit : function() {
+				return $(this).form('validate');
+			},
+			success : function(result) {
+				var result = eval('(' + result + ')');
+				if (result.errorMsg) {
+					$.messager.show({
+						title : 'Error',
+						msg : result.errorMsg
+					});
+				} else {
+					result = JSON.parse(result);
+					doPager();
+					$('#dg').datagrid('loadData', result); // reload the data
+				}
+			}
+		});
+	}
+	
+	function newWspuser(){
+		$('#dlg').dialog('open').dialog('setTitle', '新增Wsp用户信息');
+		$('#fm').form('clear');
+		urladdr = 'wspusermanage_newwspuser.action';		
+        $("#selProvince").empty();
+        $("#selCity").empty();
+        $("#selDistrict").empty();
+		$.each(province, function(k, p) {
+			var option = "<option value='" + p.ProID + "'>" + p.ProName
+					+ "</option>";
+			$("#selProvince").append(option);
+		});
+		$("#selProvince").change(
+				function() {
+					var selValue = $(this).val();
+					$("#selCity option:gt(0)").remove();
+
+					$.each(city, function(k, p) {
+						if (p.ProID == selValue) {
+							var option = "<option value='" + p.CityID + "'>"
+									+ p.CityName + "</option>";
+							$("#selCity").append(option);
+						}
+					});
+
+				});
+		$("#selCity").change(
+				function() {
+					var selValue = $(this).val();
+					$("#selDistrict option:gt(0)").remove();
+
+					$.each(District, function(k, p) {
+						if (p.CityID == selValue) {
+							var option = "<option value='" + p.Id + "'>"
+									+ p.DisName + "</option>";
+							$("#selDistrict").append(option);
+						}
+				});
+		});
+	}
+	
+	function editWspuser() {
+		var row = $('#dg').datagrid('getSelected');
+		urladdr = 'wspusermanage_updatewspuser.action';		
+		if (row) {
+			$('#dlg').dialog('open').dialog('setTitle', '编辑Wsp用户信息');
+			$('#fm').form('load', row);
+			var userID2 = row.userID2;
+			var username = row.username;
+			var password = row.password;
+			var phonenumber = row.phonenumber;
+			var email = row.email;
+			var businesstype = row.businesstype;
+			var provincename = row.province;
+			var cityname = row.city;
+			var districtname = row.district;
+			var detailaddress = row.detailaddress;
+
+			//设置businesstype的选中项
+			var options = document.getElementById("businesstype").options;
+			for(var i=0;i<options.length;i++){
+				if(options[i].value==businesstype){				    
+					$("#businesstype").get(0).selectedIndex = i;
+				}
+			}
+            //设置省市区三级的选中项
+            $("#selProvince").empty();
+            $("#selCity").empty();
+            $("#selDistrict").empty();
+			$.each(province, function(k, p) {
+				var option = "<option value='" + p.ProID + "'>" + p.ProName
+						+ "</option>";
+				$("#selProvince").append(option);
+			});
+			var city0 = 0;
+			$.each(province, function(k, p) {
+				if (p.ProName == provincename) {
+				  $("#selProvince").get(0).selectedIndex = p.ProID-1;  
+				  //alert(p.ProName+","+provincename+",ProID="+p.ProID);
+				  //加载地市选项
+				  if(city0==0){					  
+				      var option = "<option value='0'>--请选择城市--</option>";
+				      $("#selCity").append(option);
+				      city0 = 1;
+				  }
+				  $.each(city, function(l, q) {
+					 if (q.ProID == p.ProID) {
+						  var option = "<option value='" + q.CityID + "'>"
+										+ q.CityName + "</option>";
+						  $("#selCity").append(option);
+					 }
+				 });
+				  //判断地市选中项
+				 var j=0;
+					var district0 = 0;
+				 $.each(city, function(k, r) {
+					 if (r.ProID == p.ProID) {
+						  j = j + 1;//j用于selectedIndex的索引，不是 p.ProID
+						  //alert(j);
+							 if (r.CityName == cityname) {
+								 //alert(r.CityID+","+cityname+",j="+j);
+								 $("#selCity").get(0).selectedIndex = j; 
+								 //加载区县
+								 if(district0==0){
+							         var option = "<option value='0'>--请选择区/县--</option>";
+							         $("#selDistrict").append(option);	
+							         district0 = 1;
+								 }
+								 $.each(District, function(k, s) {
+								     if (s.CityID == r.CityID) {
+										 var option = "<option value='" + s.Id + "'>"
+													+ s.DisName + "</option>";
+										 $("#selDistrict").append(option);
+								     }
+							     });
+								 //判断区县选中项
+								 var w=0;
+								 $.each(District, function(k, p) {
+									 //alert(p.DisName+","+districtname);
+									 if(p.CityID==r.CityID){
+										 w = w + 1;
+										 //alert(w);
+										 if (p.DisName == districtname) {
+											 $("#selDistrict").get(0).selectedIndex = w; 
+											 //alert("w="+w+",districtname="+districtname);
+											 return false;
+										 }
+									 }
+								  });							 
+								  return false;
+							  }					 
+					   }
+				  });
+	              return false;
+			    }
+			});
+			$("#selProvince").change(
+					function() {
+						var selValue = $(this).val();
+						//$("#selCity option:gt(0)").remove();
+						$("#selCity").empty();
+			            var option = "<option value='0'>--请选择城市--</option>";
+			            $("#selCity").append(option);
+						$.each(city, function(k, p) {
+							if (p.ProID == selValue) {
+								var option = "<option value='" + p.CityID + "'>"
+										+ p.CityName + "</option>";
+								$("#selCity").append(option);
+							}
+						});
+
+					});
+			$("#selCity").change(
+					function() {
+						var selValue = $(this).val();
+						//$("#selDistrict option:gt(0)").remove();
+						$("#selDistrict").empty();
+			            var option = "<option value='0'>--请选择区/县--</option>";
+			            $("#selDistrict").append(option);
+						$.each(District, function(k, p) {
+							if (p.CityID == selValue) {
+								var option = "<option value='" + p.Id + "'>"
+										+ p.DisName + "</option>";
+								$("#selDistrict").append(option);
+							}
+					    });
+			        });
+		     }		
+	}
+	
+	function saveWspuser(){
+		var provinceid = document.getElementById("selProvince").value;
+		var cityid = document.getElementById("selCity").value;
+		var districtid = document.getElementById("selDistrict").value;
+		//alert(provinceid+","+cityid+","+districtid);		
+		var provincename;
+		var cityname;
+		var districtname;		
+		if(provinceid==0){
+			provincename="";
+		}
+		else{
+			provincename=province[provinceid-1].ProName;
+		}
+		if(cityid==0){
+			cityname="";
+		}
+		else{
+			cityname=city[cityid-1].CityName;
+		}
+		if(districtid==0){
+			districtname="";
+		}
+		else{
+			districtname=District[districtid-1].DisName;
+		}		
+		//alert(provincename+","+cityname+","+districtname);
+		document.getElementById("province").value = provincename;
+		document.getElementById("city").value = cityname;
+		document.getElementById("district").value = districtname;
+		
+		var password = document.getElementById("password").value;
+		var repassword = document.getElementById("repassword").value;
+		//alert(password+","+repassword);
+		if(password!=repassword){
+			alert("两次输入的密码不一样，请重新输入密码！");
+			return false;
+		}
+		//获取省市区选择框的值
+        //alert(provincename+","+cityname+","+districtname);
+		document.getElementById("province").value=provincename;
+		document.getElementById("city").value=cityname;
+		document.getElementById("district").value=districtname;
+
+		$('#fm').form('submit', {
+			url : urladdr,
+			onSubmit : function() {
+				return $(this).form('validate');
+			},
+			success : function(result) {
+				var result = eval('(' + result + ')');
+				result = JSON.parse(result);
+				if (result.errorMsg) {
+					$.messager.show({
+						title : 'Error',
+						msg : result.errorMsg
+					});
+				} else {
+					$('#dlg').dialog('close'); // close the dialog
+					$('#dg').datagrid('loadData', result); // reload the data
+				}
+			}
+		});
+		
+    }
+	
+	function deleteWspuser() {
+		var row = $('#dg').datagrid('getSelected');
+		if (row) {
+			$.messager.confirm('请选择', '确定删除?', function(r) {
+				if (r) {
+					$.post('wspusermanage_deletewspuser.action', {
+						userID2 : row.userID2
+					}, function(result) {
+						var result = eval('(' + result + ')');
+						if (result.errorMsg) {
+							$.messager.show({
+								title : 'Error',
+								msg : result.errorMsg
+							});
+						} else {
+							result = JSON.parse(result);
+							$('#dg').datagrid('loadData', result); // reload the data
+						}
+					});
+				}
+			});
+		}
+	}		
+	function doPager() {
+		var p = $('#dg').datagrid('getPager');
+		$(p).pagination(
+						{
+							pageSize : 10,//每页显示的记录条数，默认为10 
+							pageList : [ 5, 10, 15 ],//可以设置每页记录条数的列表 
+							beforePageText : '第',//页数文本框前显示的汉字 
+							afterPageText : '页    共 {pages} 页',
+							displayMsg : '当前显示 {from} - {to} 条记录   共 {total} 条记录',
+							onSelectPage : function(pageNumber, pageSize) {
+								$('#searchfm')
+										.form(
+												'submit',
+												{
+													url : "wspusermanage_searchwspuser.action?page="
+															+ pageNumber
+															+ "&rows="
+															+ pageSize,
+													onSubmit : function() {
+														return $(this).form(
+																'validate');
+													},
+													success : function(result) {
+														var result = eval('('
+																+ result + ')');
+														if (result.errorMsg) {
+															$.messager
+																	.show({
+																		title : 'Error',
+																		msg : result.errorMsg
+																	});
+														} else {
+															result = JSON
+																	.parse(result);
+															$('#dg').datagrid(
+																	'loadData',
+																	result); // reload the data
+														}
+													}
+												});
+							}
+						});
+	}
+</script>
+<style type="text/css">
+#fm {
+	margin: 0;
+	padding: 10px 30px;
+}
+
+.ftitle {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.fitem {
+	margin-bottom: 5px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 80px;
+}
+
+.fitem input {
+	width: 160px;
+}
+</style>

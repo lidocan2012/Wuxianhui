@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class
+		name="Goodstype"
+		table="goodstype"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="TypeID"
+			type="java.lang.Long"
+			column="TypeID"
+		>
+			<generator class="identity"/>
+		</id>
+		<property
+			name="GoodsType"
+			column="GoodsType"
+			type="string"
+			not-null="true"
+		/>				
+
+		<property
+			name="GoodsTypeDescribe"
+			column="GoodsTypeDescribe"
+			type="string"
+			not-null="false"
+		/>
+		<property
+			name="Extends"
+			column="Extends"
+			type="string"
+			not-null="false"
+		/>
+		<many-to-one
+			name="WSPUser"
+			column="WSPUser"
+			class="Wspuser"
+			not-null="false"
+		>
+		</many-to-one>
+
+
+	</class>	
+</hibernate-mapping>

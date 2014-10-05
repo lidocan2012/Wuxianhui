@@ -1,0 +1,94 @@
+
+  <link rel="stylesheet" href="css/zTreeStyle/zTreeStyle.css" type="text/css">
+  <style>
+	body {
+	background-color: white;
+	margin:0; padding:0;
+	text-align: center;
+	}
+	div, p, table, th, td {
+		list-style:none;
+		margin:0; padding:0;
+		color:#333; font-size:12px;
+		font-family:dotum, Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+	}
+	#testIframe {margin-left: 10px;}
+  </style>
+<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="js/jquery.ztree.core-3.5.js"></script>
+  <SCRIPT type="text/javascript" >
+  
+	var zTree;
+	var demoIframe;
+
+	var setting = {
+		view: {
+			dblClickExpand: false,
+			showLine: true,
+			selectedMulti: false,
+			showIcon: true
+		},
+		data: {
+			simpleData: {
+				enable:true,
+				idKey: "id",
+				pIdKey: "pId",
+				rootPId: ""
+			}
+		},
+		callback: {
+			//beforeClick:zTreeBeforeClick
+		    onClick: zTreeOnClick
+		}
+	};
+
+
+	$(document).ready(function(){		
+	    $.ajax({
+	         type: "POST",
+	         url: "menumanage_getmenutree.action",
+	         dataType: "json",
+	         success: function (data) {
+	            var zNode = $.parseJSON(data);  //必须有此语句才能把后台传过来的json对象作为init的参数使用
+	            //var zNode = data;
+	      		var t = $("#tree");
+	    		t = $.fn.zTree.init(t, setting, zNode);
+	    		demoIframe = $("#testIframe");
+	    		demoIframe.bind("load", loadReady);
+	              	                
+	         },
+	         error: function (json) {
+	             $.messager.alert("错误", "菜单获取失败！", "error");
+	         }
+	   });
+	});
+
+	function loadReady() {
+		var bodyH = demoIframe.contents().find("body").get(0).scrollHeight,
+		htmlH = demoIframe.contents().find("html").get(0).scrollHeight,
+		maxH = Math.max(bodyH, htmlH), minH = Math.min(bodyH, htmlH),
+		h = demoIframe.height() >= maxH ? minH:maxH ;
+		if (h < 530) h = 530;
+		demoIframe.height(h);
+	}
+	
+	//点击菜单数中某个节点触发事件 	
+	function zTreeOnClick(event, treeId, treeNode) {
+	    var addr = treeNode.addr;
+		if(treeNode.addr!=null){
+			document.getElementById("iframepage").src=addr;			
+		}
+	}
+  
+  </SCRIPT>
+
+
+<div>
+<TABLE border=0 height=200px align=left>
+	<TR>
+		<TD width=100px align=left valign=top >
+			<ul id="tree" class="ztree" style="width:100px;"></ul>
+		</TD>
+	</TR>
+</div>
+

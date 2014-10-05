@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class
+		name="Menu"
+		table="menu"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="Id"
+			type="java.lang.Short"
+			column="MenuID"
+		>
+			<generator class="assigned"/>
+		</id>
+
+		<property
+			name="MenuName"
+			column="MenuName"
+			type="string"
+			not-null="true"
+			length="20"
+		/>
+		<property
+			name="Addr"
+			column="Addr"
+			type="string"
+			not-null="false"
+			length="50"
+		/>
+		<property
+			name="ParentID"
+			column="ParentID"
+			type="java.lang.Short"
+			not-null="false"
+			length="19"
+		/>
+	
+	<!-- set标签中，name属性:集合名称； table属性:多对多关联数据库表名-->
+		<set
+			name="Wspusers"
+			table="menuuser"
+			cascade="none"
+		>
+	<!-- key子标签中，column属性指定本实体类关联的外键列-->
+			<key column="MenuID"/>
+    <!-- many-to-many子标签中，column属性指定被关联实体的外键列；class制定关联的实体类-->		
+			<many-to-many column="Wspuser" class="Wspuser"/>
+		</set>
+
+
+	</class>	
+</hibernate-mapping>

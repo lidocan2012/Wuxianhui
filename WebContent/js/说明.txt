@@ -1,0 +1,3 @@
+jquery.easyui.min来源于easyUI
+其他来源于zTree
+laydate-v1.1是日期控件

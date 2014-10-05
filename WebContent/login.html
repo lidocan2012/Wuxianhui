@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+
+<!--引入easyui的css和js包 -->
+<link rel="stylesheet" type="text/css" href="css/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="css/themes/color.css">
+<link rel="stylesheet" type="text/css" href="demo/demo.css">
+<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="js/easyui-lang-zh_CN.js"></script>
+
+
+<title>无标题文档</title>
+<style type="text/css">
+#checkHR {
+	float: left;
+}
+
+#checkCode {
+	float: left;
+	width: 90px;
+	height: 15px;
+	padding: 0px 10px;
+	color: red;
+	font-size: 16px;
+	font-family: Arial;
+	font-style: italic;
+	color: Red;
+	border: 0;
+	padding: 2px 3px;
+	letter-spacing: 3px;
+	font-weight: bolder;
+}
+
+.refresh {
+	font-size: 14px;
+	color: red;
+}
+
+
+</style>
+<script language="javascript" type="application/javascript">
+	var code = ""; //在全局 定义验证码
+	function createCode() {
+		code = "";
+		var codeLength = 6;//验证码的长度
+		var checkCode = document.getElementById("checkCode");
+		checkCode.value = "";
+		var selectChar = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C',
+				'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q',
+				'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+
+		for (var i = 0; i < codeLength; i++) {
+			var charIndex = Math.floor(Math.random() * 32);
+			code += selectChar[charIndex];
+		}
+		if (code.length != codeLength) {
+			createCode();
+		}
+		document.getElementById("checkCode").innerHTML = code;
+	}
+
+	function validate() {
+		var inputCode = document.getElementById("checkNum").value.toUpperCase();
+
+		if (inputCode.length <= 0) {
+			alert("请输入验证码！");
+			return false;
+		} else if (inputCode != code) {
+			alert("验证码输入错误！");
+			createCode();
+			return false;
+		} else {
+			//alert("验证码通过！");
+			return true;
+		}
+	}
+</script>
+</head>
+
+<body onload="createCode();">
+<h2 align="center">欢迎登陆无线慧</h2>
+<div id="box" style="width: 800px; height: 350px; margin: 0 auto 0 auto;"  align="center">
+<div id="bar" class="easyui-panel" title="请登陆" style="width: 450px; padding: 10px 15px;margin: auto;">
+<form id="loginfm" name="loginfm" method="post" novalidate>
+	<table width="400" height="100" border ="0px" cellspacing="6px" align="center">
+		<tr >
+			<td width="291">
+				<div style="margin-bottom: 10px; margin: auto;">
+					<span class="text">用户名:</span>&nbsp&nbsp&nbsp <input
+						class="easyui-textbox" name="username"
+						style="width: 150px; height: 15px">
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td width="104">
+				<div style="margin-bottom: 10px; margin: auto;">
+					<span class="text">密&nbsp&nbsp 码:</span> &nbsp&nbsp 
+					<input id="password" name="password" type="password" autocomplete="off" style="width: 150px; height: 15px">
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td width="200"><div id="checkHR">
+					<span class="text">请输入验证码：</span> <input type="text" value=""
+						id="checkNum" style="height: 15px;" />
+				</div></td>
+			<td width="200"><a href="javascript:void(0);"><div
+						id="checkCode" onclick="createCode()";></div></a></td>
+
+		</tr>
+		<tr>
+		    <td width="140"><a href="javascript:void(0)" class="easyui-linkbutton" style="width: 210px; height: 25px;color: #80F;" onclick="submitForm()">登陆</a></td>
+		</tr>
+		<tr>
+		    <td width="50"><a href="forgetpassword.html">忘记密码</a></td>
+		    <td width="50"><a href="usermanage/registrate.html">免费注册</a></td>
+		</tr>	
+	</table>
+
+	</form>
+</div>
+</div>
+<script>
+    window.load = function(){
+	    document.getElementById('password').value='';
+	}; 
+	function submitForm(){
+		//核对验证码
+		if(validate()){
+		   var url = "login.action";
+		   document.loginfm.action = url;
+		   document.loginfm.submit();
+		}
+
+    }
+	
+</script>
+
+</body>
+</html>

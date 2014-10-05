@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class
+		name="Ordermanage"
+		table="ordermanage"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="Id"
+			type="string"
+			column="OrderId"
+		>
+			<generator class="assigned"/>
+		</id>
+
+		<property
+			name="OrderDate"
+			column="OrderDate"
+			type="date"
+			not-null="false"
+			length="10"
+		/>
+		<property
+			name="OrderTime"
+			column="OrderTime"
+			type="time"
+			not-null="false"
+			length="8"
+		/>
+		<property
+			name="Expenditure"
+			column="Expenditure"
+			type="big_decimal"
+			not-null="false"
+			length="8"
+		/>
+		<property
+			name="Status"
+			column="Status"
+			type="string"
+			not-null="false"
+			length="10"
+		/>
+		<many-to-one
+			name="WSPUser"
+			column="WSPUser"
+			class="Wspuser"
+			not-null="false"
+		>
+		</many-to-one>
+		<many-to-one
+			name="UserID"
+			column="UserID"
+			class="User"
+			not-null="false"
+		>
+		</many-to-one>
+		<many-to-one
+			name="TableID"
+			class="Tablemanage"
+			not-null="false"
+		>
+		     <column name="TableID" />
+             <column name="Wspuser" />
+		</many-to-one>
+	
+
+		<set name="Orderdetails" inverse="true">
+			<key column="OrderId"/>
+			<one-to-many class="Orderdetail"/>
+		</set>
+
+
+	</class>	
+</hibernate-mapping>

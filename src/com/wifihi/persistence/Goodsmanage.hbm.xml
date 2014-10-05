@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class
+		name="Goodsmanage"
+		table="goodsmanage"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="Id"
+			type="java.lang.Long"
+			column="GoodsID"
+		>
+			<generator class="identity"/>
+		</id>
+
+		<property
+			name="GoodsName"
+			column="GoodsName"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="Unit"
+			column="Unit"
+			type="string"
+			not-null="false"
+			length="10"
+		/>
+		<property
+			name="Price"
+			column="Price"
+			type="big_decimal"
+			not-null="false"
+			length="8"
+		/>
+		<property
+			name="Description"
+			column="Description"
+			type="string"
+			not-null="false"
+		/>
+		<property
+			name="PriceUnit"
+			column="PriceUnit"
+			type="string"
+			not-null="false"
+		/>
+		<property
+			name="Picture"
+			column="Picture"
+			type="string"
+			not-null="false"
+			length="100"
+		/>
+		<property
+			name="ConsumedTimes"
+			column="ConsumedTimes"
+			type="integer"
+			not-null="false"
+			length="10"
+		/>
+		<many-to-one
+			name="WSPUser"
+			column="WSPUser"
+			class="Wspuser"
+			not-null="false"
+			lazy="false"   
+		>
+		</many-to-one>
+		
+		<many-to-one
+			name="goodsType"
+			column="Goodstype"
+			class="Goodstype"
+			not-null="true"
+			lazy="false"   
+		>
+		</many-to-one>		
+        	
+		<many-to-one
+			name="DetailID"
+			column="DetailID"
+			class="Orderdetail"
+			not-null="false"
+		>
+		</many-to-one>
+	
+
+		<set name="Orderdetails" inverse="true">
+			<key column="GoodsID"/>
+			<one-to-many class="Orderdetail"/>
+		</set>
+
+
+	</class>	
+</hibernate-mapping>

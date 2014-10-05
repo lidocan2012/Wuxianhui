@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class
+		name="Wifimanage"
+		table="wifimanage"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="Id"
+			type="java.lang.Long"
+			column="WifiID"
+		>
+			<generator class="identity"/>
+		</id>
+
+		<property
+			name="WifiName"
+			column="WifiName"
+			type="string"
+			not-null="true"
+			length="30"
+		/>
+		<property
+			name="MACAddress"
+			column="MACAddress"
+			type="string"
+			not-null="true"
+			length="30"
+		/>
+		<property
+			name="Password"
+			column="Password"
+			type="string"
+			not-null="true"
+			length="20"
+		/>
+		<property
+			name="Authorise"
+			column="Authorise"
+			type="boolean"
+			not-null="true"
+		/>
+		<property
+			name="DisplayName"
+			column="DisplayName"
+			type="string"
+			not-null="true"
+			length="30"
+		/>
+		<many-to-one
+			name="WSPUser"
+			column="WSPUser"
+			class="Wspuser"
+			not-null="false"
+		>
+		</many-to-one>
+		
+		<set name="Userwifivisitinghistories" inverse="true">
+			<key column="WifiID"/>
+			<one-to-many class="Userwifivisitinghistory"/>
+		</set>
+
+	</class>	
+</hibernate-mapping>

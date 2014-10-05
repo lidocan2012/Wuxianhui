@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wifihi.persistence">
+	<class	name="Wspuser"
+		table="wspuser"
+	>
+		<meta attribute="sync-DAO">true</meta>
+
+		<id
+			name="UserID2"
+			type="java.lang.Long"
+			column="WSPUser"
+		>
+			<generator class="identity"/>
+		</id>
+
+		<property
+			name="PhoneNumber"
+			column="PhoneNumber"
+			type="string"
+			not-null="true"
+			length="11"
+		/>
+		<property
+			name="QQNumber"
+			column="QQNumber"
+			type="java.lang.Long"
+			not-null="false"
+			length="19"
+		/>
+		<property
+			name="UserName"
+			column="UserName"
+			type="string"
+			not-null="false"
+			length="30"
+		/>
+		<property
+			name="RegistrateDate"
+			column="RegistrateDate"
+			type="date"
+			not-null="false"
+			length="10"
+		/>
+		<property
+			name="RegistrateTime"
+			column="RegistrateTime"
+			type="time"
+			not-null="false"
+			length="8"
+		/>
+		<property
+			name="Email"
+			column="Email"
+			type="string"
+			not-null="false"
+		/>
+		<property
+			name="Country"
+			column="Country"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="Province"
+			column="Province"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="City"
+			column="City"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="District"
+			column="District"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="DetailAddress"
+			column="DetailAddress"
+			type="string"
+			not-null="false"
+		/>
+		<property
+			name="Password"
+			column="Password"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="BusinessType"
+			column="BusinessType"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="Showinfo"
+			column="Showinfo"
+			type="string"
+			not-null="false"
+			length="40"
+		/>
+		<property 
+			name="Rid"
+			column="RID"
+			type="string"
+			not-null="false"
+			length="15"
+		/>
+
+
+		<set inverse="true" name="Goodsmanages">
+			<key column="WSPUser" />
+			<one-to-many class="Goodsmanage" />
+		</set>
+
+		<set inverse="true" name="Wifimanages">
+			<key column="WSPUser" />
+			<one-to-many class="Wifimanage" />
+		</set>
+
+		<set inverse="true" name="Wspuservisithistories">
+			<key column="WSPUser" />
+			<one-to-many class="Wspuservisithistory" />
+		</set>
+
+		<set inverse="true" name="Orderdetails">
+			<key column="WSPUser" />
+			<one-to-many class="Orderdetail" />
+		</set>
+
+		<set inverse="true" name="Tablemanages">
+			<key column="WSPUser" />
+			<one-to-many class="Tablemanage" />
+		</set>
+
+		<set inverse="true" name="Ordermanages">
+			<key column="WSPUser" />
+			<one-to-many class="Ordermanage" />
+		</set>
+
+		<set
+			cascade="all"
+			name="Menus"
+			table="menuuser"
+		>
+			<key column="WSPUser" />
+			<many-to-many class="Menu" column="MenuID" />
+		</set>
+	</class>	
+</hibernate-mapping>
