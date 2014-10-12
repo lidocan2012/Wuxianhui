@@ -30,7 +30,7 @@ public abstract class BaseOrderdetail  implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public BaseOrderdetail (java.lang.String id) {
+	public BaseOrderdetail (java.lang.Long id) {
 		this.setId(id);
 		initialize();
 	}
@@ -39,7 +39,7 @@ public abstract class BaseOrderdetail  implements Serializable {
 	 * Constructor for required fields
 	 */
 	public BaseOrderdetail (
-		java.lang.String id,
+		java.lang.Long id,
 		java.lang.Integer number) {
 
 		this.setId(id);
@@ -54,7 +54,7 @@ public abstract class BaseOrderdetail  implements Serializable {
 	private int hashCode = Integer.MIN_VALUE;
 
 	// primary key
-	private java.lang.String id;
+	private java.lang.Long id;
 
 	// fields
 	private java.lang.Integer number;
@@ -72,10 +72,10 @@ public abstract class BaseOrderdetail  implements Serializable {
 	/**
 	 * Return the unique identifier of this class
      * @hibernate.id
-     *  generator-class="assigned"
+     *  generator-class="identity"
      *  column="DetailID"
      */
-	public java.lang.String getId () {
+	public java.lang.Long getId () {
 		return id;
 	}
 
@@ -83,7 +83,7 @@ public abstract class BaseOrderdetail  implements Serializable {
 	 * Set the unique identifier of this class
 	 * @param id the new ID
 	 */
-	public void setId (java.lang.String id) {
+	public void setId (java.lang.Long id) {
 		this.id = id;
 		this.hashCode = Integer.MIN_VALUE;
 	}

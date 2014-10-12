@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration
+    PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory name="HibernateSessionFactory">
+
+		<!-- local connection properties -->
+		<property name="hibernate.connection.url"><![CDATA[jdbc:mysql://localhost:3306/wuxianhui?useUnicode=true&characterEncoding=utf8]]></property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">123456</property>
+		<!-- property name="hibernate.connection.pool_size"></property -->
+
+		<!-- dialect for MySQL -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <property name="hibernate.show_sql">true</property>
+		<property name="format_sql">true</property>
+		<mapping resource="com/wifihi/persistence/Menu.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Goodsmanage.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Goodstype.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Menuuser.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Orderdetail.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Ordermanage.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Tablemanage.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/User.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Uservisitingsystemhistory.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Wifimanage.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Wspuser.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Wspuservisithistory.hbm.xml"/>
+		<mapping resource="com/wifihi/persistence/Userwifivisitinghistory.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>

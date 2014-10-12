@@ -11,10 +11,10 @@
 		<meta attribute="sync-DAO">true</meta>
 		<id
 			name="Id"
-			type="string"
+			type="java.lang.Long"
 			column="WSPVisitingID"
 		>
-			<generator class="assigned"/>
+			<generator class="identity"/>
 		</id>
 
 		<property

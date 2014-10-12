@@ -21,7 +21,6 @@ public abstract class BaseOrdermanage  implements Serializable {
 	public static String PROP_EXPENDITURE = "Expenditure";
 	public static String PROP_USER_I_D = "UserID";
 	public static String PROP_ID = "Id";
-	public static String PROP_W_S_P_USER = "WSPUser";
 	public static String PROP_TABLE_I_D = "TableID";
 
 
@@ -33,7 +32,7 @@ public abstract class BaseOrdermanage  implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public BaseOrdermanage (java.lang.String id) {
+	public BaseOrdermanage (java.lang.Long id) {
 		this.setId(id);
 		initialize();
 	}
@@ -45,7 +44,7 @@ public abstract class BaseOrdermanage  implements Serializable {
 	private int hashCode = Integer.MIN_VALUE;
 
 	// primary key
-	private java.lang.String id;
+	private java.lang.Long id;
 
 	// fields
 	private java.util.Date orderDate;
@@ -54,7 +53,6 @@ public abstract class BaseOrdermanage  implements Serializable {
 	private java.lang.String status;
 
 	// many to one
-	private com.wifihi.persistence.Wspuser wSPUser;
 	private com.wifihi.persistence.User userID;
 	private com.wifihi.persistence.Tablemanage tableID;
 
@@ -66,10 +64,10 @@ public abstract class BaseOrdermanage  implements Serializable {
 	/**
 	 * Return the unique identifier of this class
      * @hibernate.id
-     *  generator-class="assigned"
+     *  generator-class="identity"
      *  column="OrderId"
      */
-	public java.lang.String getId () {
+	public java.lang.Long getId () {
 		return id;
 	}
 
@@ -77,7 +75,7 @@ public abstract class BaseOrdermanage  implements Serializable {
 	 * Set the unique identifier of this class
 	 * @param id the new ID
 	 */
-	public void setId (java.lang.String id) {
+	public void setId (java.lang.Long id) {
 		this.id = id;
 		this.hashCode = Integer.MIN_VALUE;
 	}
@@ -149,23 +147,6 @@ public abstract class BaseOrdermanage  implements Serializable {
 	 */
 	public void setStatus (java.lang.String status) {
 		this.status = status;
-	}
-
-
-
-	/**
-	 * Return the value associated with the column: WSPUser
-	 */
-	public com.wifihi.persistence.Wspuser getWSPUser () {
-		return wSPUser;
-	}
-
-	/**
-	 * Set the value related to the column: WSPUser
-	 * @param wSPUser the WSPUser value
-	 */
-	public void setWSPUser (com.wifihi.persistence.Wspuser wSPUser) {
-		this.wSPUser = wSPUser;
 	}
 
 

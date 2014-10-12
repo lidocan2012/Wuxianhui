@@ -11,10 +11,10 @@
 		<meta attribute="sync-DAO">true</meta>
 		<id
 			name="Id"
-			type="string"
+			type="java.lang.Long"
 			column="OrderId"
 		>
-			<generator class="assigned"/>
+			<generator class="identity"/>
 		</id>
 
 		<property
@@ -45,13 +45,6 @@
 			not-null="false"
 			length="10"
 		/>
-		<many-to-one
-			name="WSPUser"
-			column="WSPUser"
-			class="Wspuser"
-			not-null="false"
-		>
-		</many-to-one>
 		<many-to-one
 			name="UserID"
 			column="UserID"

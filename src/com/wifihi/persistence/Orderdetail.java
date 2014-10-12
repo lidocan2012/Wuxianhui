@@ -15,7 +15,7 @@ public class Orderdetail extends BaseOrderdetail {
 	/**
 	 * Constructor for primary key
 	 */
-	public Orderdetail (java.lang.String id) {
+	public Orderdetail (java.lang.Long id) {
 		super(id);
 	}
 
@@ -23,15 +23,9 @@ public class Orderdetail extends BaseOrderdetail {
 	 * Constructor for required fields
 	 */
 	public Orderdetail (
-		java.lang.String id,
+		java.lang.Long id,
 		java.lang.Integer number) {
 
-		super (
-			id,
-			number);
+		super (id,number);
 	}
-
-/*[CONSTRUCTOR MARKER END]*/
-
-
 }

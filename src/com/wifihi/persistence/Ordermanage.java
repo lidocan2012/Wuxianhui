@@ -15,7 +15,7 @@ public class Ordermanage extends BaseOrdermanage {
 	/**
 	 * Constructor for primary key
 	 */
-	public Ordermanage (java.lang.String id) {
+	public Ordermanage (java.lang.Long id) {
 		super(id);
 	}
 
